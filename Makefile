@@ -14,12 +14,11 @@ venv:
 test: tests ${VENV}
 	${PYTHON} -m unittest discover -s tests -b 2> tests.log
 
-build: test_ok 
+build: tests.log
 	${PYTHON} -m build
 
 clean:
 	rm -rf ${VENV} 
 	find . -name '__pycache__' -exec rm -r '{}' \;
-	tail -1 tests.log
 
 	
