@@ -8,7 +8,7 @@ all: venv test build
 venv:
 	python3 -m venv ${VENV}
 	. ${VENV}/bin/activate
-	pip install build
+	pip install -U pip build
 	pip install .
 
 test: tests ${VENV}
