@@ -18,7 +18,7 @@ def create_api(test_config=None):
         for a in ['a', 'b', 'c']:
             valid.append(validate(request.args.get(a)))
 
-        cub = Cuboid(*sorted(valid))
+        cub = Cuboid(valid)
 
         about_cuboid = {
             'cuboid': cub.__dict__,
@@ -27,6 +27,7 @@ def create_api(test_config=None):
             'perimeter': cub.perimeter()
         }
 
+        #Write to DB as *sorted(valid)
         r = make_response(jsonify(about_cuboid), 200)
         return r
 

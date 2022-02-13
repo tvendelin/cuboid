@@ -30,7 +30,7 @@ def cli(*args):
     for a in args:
         try:
             x = Decimal(a)
-            if x < 0:
+            if x <= 0:
                 raise ValueError()
         except (ValueError, InvalidOperation) as e:
             usage('All edges of a cuboid must be positive real numbers')
