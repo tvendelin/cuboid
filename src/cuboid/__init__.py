@@ -20,4 +20,3 @@ class Cuboid:
 
     def perimeter(self):
         return 4 * (self.a + self.b + self.c)
-

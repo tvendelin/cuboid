@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify, make_response
 from werkzeug.exceptions import NotFound
 from cuboid import Cuboid
 from decimal import Decimal, InvalidOperation
-import os
 import mariadb
+
 
 def create_api(test_config=None):
     api = Flask(__name__)
@@ -22,9 +22,9 @@ def create_api(test_config=None):
 
     except mariadb.Error as e:
         api.config['CONN'] = None
-        print('Could not connect to database, proceeding with limited functionality')
+        print('Could not connect to database, '
+              'proceeding with limited functionality')
         print(e)
-
 
     @api.route('/v1/cuboids', methods=['GET'])
     def get_cuboid():
@@ -47,8 +47,13 @@ def create_api(test_config=None):
         if api.config['CONN']:
             try:
                 cur = api.config['CONN'].cursor()
-                cur.execute("REPLACE INTO cuboid(a, b, c, vol, surf, per) VALUES(?,?,?,?,?,?)",
-                        (*sorted(valid), cub.volume(), cub.surface(), cub.perimeter()))
+                cur.execute(
+                        "REPLACE INTO cuboid(a, b, c, vol, surf, per)"
+                        "VALUES(?,?,?,?,?,?)",
+                        (*sorted(valid),
+                            cub.volume(),
+                            cub.surface(),
+                            cub.perimeter()))
             except mariadb.Error as e:
                 print(e)
             finally:
@@ -58,12 +63,10 @@ def create_api(test_config=None):
         return r
 
         return r
-        
 
     @api.errorhandler(NotFound)
     def not_found_handler(e):
         return jsonify(e.__dict__), 404
-
 
     def list_cuboids():
         res = list()
@@ -71,8 +74,9 @@ def create_api(test_config=None):
         if api.config['CONN']:
             try:
                 cur = api.config['CONN'].cursor()
-                cur.execute("SELECT a, b, c, vol, surf, per FROM cuboid ORDER BY tstamp DESC LIMIT 30")
-    
+                cur.execute("SELECT a, b, c, vol, surf, per"
+                            "FROM cuboid ORDER BY tstamp DESC LIMIT 30")
+
                 for (a, b, c, volume, surface, perimeter) in cur:
                     cub = Cuboid(a, b, c)
                     about_cuboid = {
@@ -87,11 +91,12 @@ def create_api(test_config=None):
                 print(e)
             finally:
                 cur.close()
-    
+
         r = make_response(jsonify(res), 200)
         return r
-    
+
     return api
+
 
 def validate(a):
     try:
@@ -101,6 +106,7 @@ def validate(a):
     except (ValueError, InvalidOperation):
         raise NotFound('All edges of a cuboid must be positive real numbers')
     return x
+
 
 if __name__ == '__main__':
     create_api().run()

@@ -7,9 +7,10 @@ usage_msg = '''
 
     Calculates volume, surface and perimeter of a rectangular cuboid
 
-    Usage: 
+    Usage:
     cuboid <edge a> <edge b> <edge c>
 '''
+
 
 def usage(err=None):
     if err:
@@ -32,7 +33,7 @@ def cli(*args):
             x = Decimal(a)
             if x <= 0:
                 raise ValueError()
-        except (ValueError, InvalidOperation) as e:
+        except (ValueError, InvalidOperation):
             usage('All edges of a cuboid must be positive real numbers')
 
         valid.append(x)
