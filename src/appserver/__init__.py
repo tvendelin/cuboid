@@ -64,8 +64,7 @@ def create_api(test_config=None):
 
         if api.config['CONN']:
             cur = api.config['CONN'].cursor()
-            cur.execute("SELECT * FROM cuboid ORDER BY tstamp DESC LIMIT 30",
-                    (*sorted(valid), cub.volume(), cub.surface(), cub.perimeter()))
+            cur.execute("SELECT * FROM cuboid ORDER BY tstamp DESC LIMIT 30")
     
             for (a, b, c, volume, surface, perimeter) in cur:
                 cub = Cuboid(a, b, c)
