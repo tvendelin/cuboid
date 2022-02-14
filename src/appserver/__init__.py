@@ -65,8 +65,18 @@ def list_cuboids():
         cur = api.config['CONN'].cursor()
         cur.execute("SELECT * FROM cuboid ORDER BY tstamp DESC LIMIT 30",
                 *sorted(valid), cub.volume(), cub.surface(), cub.perimeter())
-        for l in cur:
-            res = dict(zip('a', 'b', 'c', 'volume', 'surface', 'perimeter'), l)
+        
+        res = list()
+
+        for (a, b, c, volume, surface, perimeter) in cur:
+            cub = Cuboid(a, b, c)
+            about_cuboid = (
+                'cuboid': cub.__dict__,
+                'volume': volume,
+                'surface': surface,
+                'perimeter': perimeter
+            )
+            res.append(about_cuboid)
 
     r = make_response(jsonify(res), 200)
     return r
