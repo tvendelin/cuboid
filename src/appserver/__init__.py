@@ -11,7 +11,7 @@ def create_api(test_config=None):
 
     try:
         conn = mariadb.connect(
-            user=api.config['DB_USER']
+            user=api.config['DB_USER'],
             password=api.config['DB_PASSWORD'],
             host=api.config['DB_HOST'],
             port=api.config['DB_PORT'],
