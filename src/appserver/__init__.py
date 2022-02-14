@@ -48,7 +48,7 @@ def create_api(test_config=None):
                 cur = api.config['CONN'].cursor()
                 cur.execute("REPLACE INTO cuboid(a, b, c, vol, surf, per) VALUES(?,?,?,?,?,?)",
                         (*sorted(valid), cub.volume(), cub.surface(), cub.perimeter()))
-            except mariadb.Error as e
+            except mariadb.Error as e:
                 print(e)
             finally:
                 cur.close()
