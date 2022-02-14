@@ -19,9 +19,10 @@ def create_api(test_config=None):
         )
         api.config['CONN'] = conn
 
-    except mariadb.Error:
+    except mariadb.Error as e:
         api.config['CONN'] = None
         print('Could not connect to database, proceeding with limited functionality')
+        print(e)
 
 
     @api.route('/v1/cuboids', methods=['GET'])
