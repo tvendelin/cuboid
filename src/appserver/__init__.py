@@ -17,7 +17,10 @@ def create_api(test_config=None):
             port=api.config['DB_PORT'],
             database=api.config['DB_DATABASE']        
         )
+        api.config['CONN'] = conn
+
     except mariadb.Error:
+        api.config['CONN'] = None
         print('Could not connect to database, proceeding with limited functionality')
 
 
@@ -39,7 +42,11 @@ def create_api(test_config=None):
             'perimeter': cub.perimeter()
         }
 
-        #Write to DB as *sorted(valid)
+        if api.config['CONN']:
+            cur = api.config['CONN'].cursor()
+            cur.execute("REPLACE INTO cuboid(a, b, c, vol, surf, per) VALUES(?,?,?,?,?,?)",
+                    *sorted(valid), cub.volume(), cub.surface(), cub.perimeter())
+
         r = make_response(jsonify(about_cuboid), 200)
         return r
 
@@ -54,7 +61,14 @@ def create_api(test_config=None):
 
 
 def list_cuboids():
-    r = make_response(jsonify(dict()), 200)
+    if api.config['CONN']:
+        cur = api.config['CONN'].cursor()
+        cur.execute("SELECT * FROM cuboid ORDER BY tstamp DESC LIMIT 30",
+                *sorted(valid), cub.volume(), cub.surface(), cub.perimeter())
+        for l in cur:
+            res = dict(zip('a', 'b', 'c', 'volume', 'surface', 'perimeter'), l)
+
+    r = make_response(jsonify(res), 200)
     return r
 
 
