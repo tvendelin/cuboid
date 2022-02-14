@@ -47,6 +47,7 @@ def create_api(test_config=None):
             cur = api.config['CONN'].cursor()
             cur.execute("REPLACE INTO cuboid(a, b, c, vol, surf, per) VALUES(?,?,?,?,?,?)",
                     (*sorted(valid), cub.volume(), cub.surface(), cub.perimeter()))
+            cur.close()
 
         r = make_response(jsonify(about_cuboid), 200)
         return r
@@ -75,6 +76,8 @@ def create_api(test_config=None):
                     'perimeter': perimeter
                     }
                 res.append(about_cuboid)
+
+            cur.close()
     
         r = make_response(jsonify(res), 200)
         return r
