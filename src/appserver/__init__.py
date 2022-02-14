@@ -3,10 +3,22 @@ from werkzeug.exceptions import NotFound
 from cuboid import Cuboid
 from decimal import Decimal, InvalidOperation
 import os
+import mariadb
 
 def create_api(test_config=None):
     api = Flask(__name__)
     api.config.from_envvar('CUBOID_CONFIG')
+
+    try:
+        conn = mariadb.connect(
+            user=api.config['DB_USER']
+            password=api.config['DB_PASSWORD'],
+            host=api.config['DB_HOST'],
+            port=api.config['DB_PORT'],
+            database=api.config['DB_DATABASE']        
+        )
+    except mariadb.Error:
+        print('Could not connect to database, proceeding with limited functionality')
 
 
     @api.route('/v1/cuboids', methods=['GET'])
