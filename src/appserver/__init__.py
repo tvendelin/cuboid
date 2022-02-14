@@ -70,12 +70,12 @@ def list_cuboids():
 
         for (a, b, c, volume, surface, perimeter) in cur:
             cub = Cuboid(a, b, c)
-            about_cuboid = (
+            about_cuboid = {
                 'cuboid': cub.__dict__,
                 'volume': volume,
                 'surface': surface,
                 'perimeter': perimeter
-            )
+                }
             res.append(about_cuboid)
 
     r = make_response(jsonify(res), 200)
