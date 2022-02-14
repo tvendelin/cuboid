@@ -44,10 +44,14 @@ def create_api(test_config=None):
         }
 
         if api.config['CONN']:
-            cur = api.config['CONN'].cursor()
-            cur.execute("REPLACE INTO cuboid(a, b, c, vol, surf, per) VALUES(?,?,?,?,?,?)",
-                    (*sorted(valid), cub.volume(), cub.surface(), cub.perimeter()))
-            cur.close()
+            try:
+                cur = api.config['CONN'].cursor()
+                cur.execute("REPLACE INTO cuboid(a, b, c, vol, surf, per) VALUES(?,?,?,?,?,?)",
+                        (*sorted(valid), cub.volume(), cub.surface(), cub.perimeter()))
+            except mariadb.Error as e
+                print(e)
+            finally:
+                cur.close()
 
         r = make_response(jsonify(about_cuboid), 200)
         return r
@@ -64,20 +68,24 @@ def create_api(test_config=None):
         res = list()
 
         if api.config['CONN']:
-            cur = api.config['CONN'].cursor()
-            cur.execute("SELECT * FROM cuboid ORDER BY tstamp DESC LIMIT 30")
+            try:
+                cur = api.config['CONN'].cursor()
+                cur.execute("SELECT * FROM cuboid ORDER BY tstamp DESC LIMIT 30")
     
-            for (a, b, c, volume, surface, perimeter) in cur:
-                cub = Cuboid(a, b, c)
-                about_cuboid = {
-                    'cuboid': cub.__dict__,
-                    'volume': volume,
-                    'surface': surface,
-                    'perimeter': perimeter
-                    }
-                res.append(about_cuboid)
+                for (a, b, c, volume, surface, perimeter) in cur:
+                    cub = Cuboid(a, b, c)
+                    about_cuboid = {
+                        'cuboid': cub.__dict__,
+                        'volume': volume,
+                        'surface': surface,
+                        'perimeter': perimeter
+                        }
+                    res.append(about_cuboid)
 
-            cur.close()
+            except mariadb.Error as e:
+                print(e)
+            finally:
+                cur.close()
     
         r = make_response(jsonify(res), 200)
         return r
