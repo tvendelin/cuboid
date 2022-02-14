@@ -57,30 +57,29 @@ def create_api(test_config=None):
     def not_found_handler(e):
         return jsonify(e.__dict__), 404
 
-    return api
 
-
-def list_cuboids():
-    if api.config['CONN']:
-        cur = api.config['CONN'].cursor()
-        cur.execute("SELECT * FROM cuboid ORDER BY tstamp DESC LIMIT 30",
-                *sorted(valid), cub.volume(), cub.surface(), cub.perimeter())
-        
+    def list_cuboids():
         res = list()
 
-        for (a, b, c, volume, surface, perimeter) in cur:
-            cub = Cuboid(a, b, c)
-            about_cuboid = {
-                'cuboid': cub.__dict__,
-                'volume': volume,
-                'surface': surface,
-                'perimeter': perimeter
-                }
-            res.append(about_cuboid)
-
-    r = make_response(jsonify(res), 200)
-    return r
-
+        if api.config['CONN']:
+            cur = api.config['CONN'].cursor()
+            cur.execute("SELECT * FROM cuboid ORDER BY tstamp DESC LIMIT 30",
+                    *sorted(valid), cub.volume(), cub.surface(), cub.perimeter())
+    
+            for (a, b, c, volume, surface, perimeter) in cur:
+                cub = Cuboid(a, b, c)
+                about_cuboid = {
+                    'cuboid': cub.__dict__,
+                    'volume': volume,
+                    'surface': surface,
+                    'perimeter': perimeter
+                    }
+                res.append(about_cuboid)
+    
+        r = make_response(jsonify(res), 200)
+        return r
+    
+    return api
 
 def validate(a):
     try:
