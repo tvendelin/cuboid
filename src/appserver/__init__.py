@@ -18,7 +18,7 @@ def create_api(test_config=None):
         for a in ['a', 'b', 'c']:
             valid.append(validate(request.args.get(a)))
 
-        cub = Cuboid(valid)
+        cub = Cuboid(*valid)
 
         about_cuboid = {
             'cuboid': cub.__dict__,
