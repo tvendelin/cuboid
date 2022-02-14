@@ -15,7 +15,8 @@ def create_api(test_config=None):
             password=api.config['DB_PASSWORD'],
             host=api.config['DB_HOST'],
             port=api.config['DB_PORT'],
-            database=api.config['DB_DATABASE']        
+            database=api.config['DB_DATABASE'],
+            autocommit=True
         )
         api.config['CONN'] = conn
 
