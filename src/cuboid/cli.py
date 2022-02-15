@@ -20,6 +20,11 @@ def usage(err=None):
 
 
 def cli(*args):
+    """
+    Takes three arguments representing positive real numbers
+    as edges of a rectangular cuboid and prints its volume,
+    surface area and the sum of the sides.
+    """
     if len(args) == 0:
         usage()
 

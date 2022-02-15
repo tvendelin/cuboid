@@ -3,13 +3,16 @@
 VENV := v
 PYTHON=${VENV}/bin/python
 
-all: venv test build
+all: venv test build doc
 
 venv:
 	python3 -m venv ${VENV}
 	. ${VENV}/bin/activate
 	pip install -U pip build
 	pip install .
+
+doc: tests.log
+	pdoc --html .
 
 test: tests ${VENV}
 	${PYTHON} -m unittest discover -s tests -b 2> tests.log
