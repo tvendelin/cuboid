@@ -8,7 +8,7 @@ all: venv test build doc
 venv:
 	python3 -m venv ${VENV}
 	. ${VENV}/bin/activate
-	pip install -U pip build
+	pip install -U pip build pdoc
 	pip install .
 
 doc: tests.log
