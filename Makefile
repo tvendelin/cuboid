@@ -12,7 +12,7 @@ venv:
 	pip install .
 
 doc: tests.log
-	pdoc --html .
+	${PYTHON} -m pdoc --html --force .
 
 test: tests ${VENV}
 	${PYTHON} -m unittest discover -s tests -b 2> tests.log
